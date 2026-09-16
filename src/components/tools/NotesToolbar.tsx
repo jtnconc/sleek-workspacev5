@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { TextB, CaretDoubleRight, Highlighter, TextItalic, ListBullets } from "@phosphor-icons/react";
+import { TextB, CaretDoubleRight, Highlighter, TextItalic, ListBullets, Table } from "@phosphor-icons/react";
 import { ImagePlus } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import {
   execNotesCommand,
   insertNotesImage,
+  insertNotesTable,
   toggleNotesList,
   applyNotesHighlight,
   restoreNotesSelection,
@@ -205,6 +206,23 @@ export function NotesToolbar({ visibleCount }: NotesToolbarProps) {
       >
         <ImagePlus className="size-[14px]" />
         Insert image
+      </button>
+
+      <button
+        type="button"
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => {
+          const insert = () => {
+            restoreNotesSelection();
+            insertNotesTable();
+          };
+          if (fromOverflow) runOverflowAction(insert);
+          else insert();
+        }}
+        className="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-left text-sm transition-colors hover:bg-secondary"
+      >
+        <Table size={16} />
+        Insert table
       </button>
     </div>
   );
