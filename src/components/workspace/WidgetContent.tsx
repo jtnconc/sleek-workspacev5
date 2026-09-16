@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Clock,
   Flag,
+  MoreHorizontal,
   Pencil,
   Pin,
   Plus,
@@ -19,6 +20,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useWorkspace } from "@/workspace/store";
 import type {
   ContactCategory,
@@ -136,15 +138,33 @@ function ItemActions({
   children: React.ReactNode;
 }) {
   return (
-    <span
-      className={cn(
-        "pointer-events-none absolute right-0 top-0 z-10 flex shrink-0 items-start gap-0.5 rounded-lg pl-2 backdrop-blur-[3px] transition-opacity duration-200",
-        revealed
-          ? "pointer-events-auto opacity-100"
-          : "opacity-0 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100",
-      )}
-    >
-      {children}
+    <span className="absolute right-0 top-0 z-10">
+      <Popover>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            aria-label="More actions"
+            onPointerDown={stop}
+            onClick={stop}
+            className={cn(
+              "flex size-5 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-opacity duration-200 hover:bg-secondary hover:text-foreground hover:opacity-100 focus-visible:opacity-100 data-[state=open]:bg-secondary data-[state=open]:opacity-100",
+              revealed ? "opacity-100" : "opacity-0 group-hover:opacity-40",
+            )}
+          >
+            <MoreHorizontal className="size-3.5" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent
+          side="bottom"
+          align="end"
+          sideOffset={4}
+          onClick={stop}
+          onPointerDown={stop}
+          className="flex w-auto items-center gap-0.5 rounded-full border-border bg-popover p-1 shadow-lg"
+        >
+          {children}
+        </PopoverContent>
+      </Popover>
     </span>
   );
 }
