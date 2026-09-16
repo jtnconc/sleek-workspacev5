@@ -761,7 +761,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           const sticky: Widget = {
             id: `sticky-${uid()}`,
             type: "sticky",
-            title: item.text.split(/\s+/).slice(0, 3).join(" ") || "Sticky",
+            title:
+              item.text
+                .replace(/<[^>]*>/g, " ")
+                .replace(/&nbsp;/g, " ")
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean)
+                .slice(0, 3)
+                .join(" ") || "Sticky",
             position: maxPos + 1,
             width: 1,
             height: 1,
