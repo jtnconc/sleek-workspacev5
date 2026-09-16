@@ -16,7 +16,7 @@ import type {
   CallLogEntry,
   ContactItem,
   HotelDetails,
-  InformationItem,
+  
   NoteVersion,
   QuoteDoc,
   ItemStatus,
@@ -77,20 +77,6 @@ const DEFAULT_WIDGETS: Widget[] = [
     accent: "blue",
     content: {
       kind: "contacts",
-      items: [],
-    },
-  },
-  {
-    id: "w-information",
-    type: "information",
-    title: "Information",
-    position: 2,
-    width: 1,
-    height: 2,
-    display: "minimized",
-    accent: "neutral",
-    content: {
-      kind: "information",
       items: [],
     },
   },
@@ -260,12 +246,6 @@ interface WorkspaceApi extends WorkspaceState {
   toggleNotePin: (widgetId: string, itemId: string) => void;
   /** Move a saved note back into the draft editor for editing. */
   editNoteInEditor: (widgetId: string, itemId: string) => void;
-  updateInformation: (widgetId: string, itemId: string, patch: Partial<InformationItem>) => void;
-  deleteInformation: (widgetId: string, itemId: string) => void;
-  addInformation: (widgetId: string) => void;
-  clearInformation: (widgetId: string) => void;
-  toggleInformationPin: (widgetId: string, itemId: string) => void;
-  convertInformationToSticky: (widgetId: string, itemId?: string) => void;
   convertNoteToSticky: (widgetId: string, itemId: string) => void;
   returnStickyToNotes: (stickyId: string) => void;
   setWidgetTint: (id: string, tint: WidgetAccent) => void;
@@ -369,8 +349,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       // Widgets whose type no longer exists (e.g. the removed "stats" widget)
       // are dropped from old saved sessions so they never render as broken cards.
       const savedWidgets = (saved.widgets ?? DEFAULT_WIDGETS).filter(
-        (w) => w.content.kind !== ("stats" as string) && w.type !== ("stats" as string),
+        (w) =>
+          w.content.kind !== ("stats" as string) &&
+          w.type !== ("stats" as string) &&
+          w.content.kind !== ("information" as string) &&
+          w.type !== ("information" as string),
       );
+
       const missingDefaults = DEFAULT_WIDGETS.filter(
         (d) => !savedWidgets.some((w) => w.type === d.type),
       ).map((d, i) => ({ ...d, position: savedWidgets.length + i }));
@@ -579,11 +564,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
               };
             if (c.kind === "contacts")
               return { ...w, content: { ...c, items: [{ id: uid(), name: text }, ...c.items] } };
-            if (c.kind === "information")
-              return {
-                ...w,
-                content: { ...c, items: [{ id: uid(), label: "Detail", value: text }, ...c.items] },
-              };
             if (c.kind !== "notes") return w;
             return { ...w, content: { ...c, items: [{ id: uid(), text }, ...c.items] } };
           }),
@@ -770,100 +750,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
             ),
           };
         }),
-      updateInformation: (widgetId, itemId, patch) =>
-        patchWidgets((ws) =>
-          ws.map((w) => {
-            if (w.id !== widgetId || w.content.kind !== "information") return w;
-            return {
-              ...w,
-              content: {
-                ...w.content,
-                items: w.content.items.map((i) => (i.id === itemId ? { ...i, ...patch } : i)),
-              },
-            };
-          }),
-        ),
-      deleteInformation: (widgetId, itemId) =>
-        patchWidgets((ws) =>
-          ws.map((w) => {
-            if (w.id !== widgetId || w.content.kind !== "information") return w;
-            return {
-              ...w,
-              content: { ...w.content, items: w.content.items.filter((i) => i.id !== itemId) },
-            };
-          }),
-        ),
-      addInformation: (widgetId) =>
-        patchWidgets((ws) =>
-          ws.map((w) => {
-            if (w.id !== widgetId || w.content.kind !== "information") return w;
-            return {
-              ...w,
-              content: {
-                ...w.content,
-                items: [...w.content.items, { id: uid(), label: "", value: "" }],
-              },
-            };
-          }),
-        ),
-      toggleInformationPin: (widgetId, itemId) =>
-        patchWidgets((ws) =>
-          ws.map((w) => {
-            if (w.id !== widgetId || w.content.kind !== "information") return w;
-            return {
-              ...w,
-              content: {
-                ...w.content,
-                items: w.content.items.map((i) => (i.id === itemId ? { ...i, pinned: !i.pinned } : i)),
-              },
-            };
-          }),
-        ),
-      clearInformation: (widgetId) =>
-        patchWidgets((ws) =>
-          ws.map((w) =>
-            w.id === widgetId && w.content.kind === "information"
-              ? { ...w, content: { ...w.content, items: [] } }
-              : w,
-          ),
-        ),
-      convertInformationToSticky: (widgetId, itemId) =>
-        patchWidgets((ws) => {
-          const source = ws.find((w) => w.id === widgetId);
-          if (!source || source.content.kind !== "information") return ws;
-          const moved = itemId
-            ? source.content.items.filter((i) => i.id === itemId)
-            : source.content.items;
-          if (!moved.length) return ws;
-          const maxPos = ws.reduce((m, w) => Math.max(m, w.position), -1);
-          const sticky: Widget = {
-            id: `sticky-${uid()}`,
-            type: "sticky",
-            title: itemId ? (moved[0]?.label ?? "Detail") : source.title,
-            position: maxPos + 1,
-            width: 1,
-            height: 1,
-            display: source.display,
-            accent: "blue",
-            tint: "blue",
-            icon: "info",
-            content: { kind: "information", items: moved.map((i) => ({ ...i })) },
-          };
-          return [
-            ...ws.map((w) =>
-              w.id === widgetId && w.content.kind === "information"
-                ? {
-                    ...w,
-                    content: {
-                      ...w.content,
-                      items: w.content.items.filter((i) => !moved.some((m) => m.id === i.id)),
-                    },
-                  }
-                : w,
-            ),
-            sticky,
-          ];
-        }),
       convertNoteToSticky: (widgetId, itemId) =>
 
         patchWidgets((ws) => {
@@ -905,7 +791,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           const sticky = ws.find((w) => w.id === stickyId);
           if (!sticky || sticky.type !== "sticky") return ws;
           const kind = sticky.content.kind;
-          if (kind !== "notes" && kind !== "information") return ws;
+          if (kind !== "notes") return ws;
           const moved = sticky.content.items as Array<{ id: string }>;
           return ws
             .filter((w) => w.id !== stickyId)

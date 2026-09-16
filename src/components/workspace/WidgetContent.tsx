@@ -1091,125 +1091,6 @@ function NotesContent({ widget }: { widget: Widget }) {
   );
 }
 
-/**
- * INFORMATION renders as a list of individually editable key/value rows,
- * matching the interaction pattern of NOTES: tap/hover reveals a contextual
- * action bar (pin, edit, convert to sticky note, delete) and the label/value
- * fields themselves are always live-editable, preserving the two-font table
- * look (uppercase muted label / monospace dark value).
- */
-function InformationContent({ widget }: { widget: Widget }) {
-  const {
-    updateInformation,
-    deleteInformation,
-    toggleInformationPin,
-    convertInformationToSticky,
-    addInformation,
-    searchQuery,
-  } = useWorkspace();
-  const [tapped, setTapped] = useState<string | null>(null);
-  const [confirming, setConfirming] = useState<string | null>(null);
-  const valueRefs = useRef<Record<string, HTMLInputElement | null>>({});
-  if (widget.content.kind !== "information") return null;
-
-  const ordered = [...widget.content.items]
-    .filter((i) => matchesQuery(`${i.label} ${i.value}`, searchQuery))
-    .sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned));
-
-  return (
-    <div className="space-y-2">
-      {ordered.length === 0 ? (
-        <p className="text-[12px] text-muted-foreground">
-          {searchQuery.trim() ? "No details match your search." : "No details yet."}
-        </p>
-      ) : (
-        <ul className="divide-y divide-border/60 overflow-hidden rounded-xl bg-surface-2">
-          {ordered.map((i) => {
-            const isConfirming = confirming === i.id;
-            return (
-              <li
-                key={i.id}
-                className={cn(
-                  "group relative flex items-center gap-3 px-3 py-1.5",
-                  i.pinned && "bg-surface",
-                )}
-                onClick={() => setTapped((v) => (v === i.id ? null : i.id))}
-              >
-                <div className="grid min-w-0 flex-1 grid-cols-2 gap-3 focus-within:grid-cols-[minmax(0,35%)_minmax(0,1fr)] focus-within:gap-4">
-                  <input
-                    value={i.label}
-                    aria-label="Label"
-                    placeholder="LABEL"
-                    onClick={stop}
-                    onPointerDown={stop}
-                    onChange={(e) => updateInformation(widget.id, i.id, { label: e.target.value })}
-                    className="label-xs min-w-0 truncate bg-transparent outline-none focus:ring-1 focus:ring-ring rounded-md px-1 -mx-1"
-                  />
-                  <input
-                    ref={(el) => {
-                      valueRefs.current[i.id] = el;
-                    }}
-                    value={i.value}
-                    aria-label="Value"
-                    placeholder="Value"
-                    onClick={stop}
-                    onPointerDown={stop}
-                    onChange={(e) => updateInformation(widget.id, i.id, { value: e.target.value })}
-                    className="min-w-0 truncate rounded-md bg-transparent px-1 -mx-1 text-right font-mono text-[12.5px] text-foreground outline-none focus:ring-1 focus:ring-ring"
-                  />
-                </div>
-
-                <ItemActions revealed={tapped === i.id || isConfirming}>
-                  {isConfirming ? (
-                    <DeleteAction
-                      label="Delete detail"
-                      confirming
-                      onRequest={() => setConfirming(i.id)}
-                      onCancel={() => setConfirming(null)}
-                      onConfirm={() => {
-                        setConfirming(null);
-                        deleteInformation(widget.id, i.id);
-                      }}
-                    />
-                  ) : (
-                    <>
-                      <MiniAction
-                        label={i.pinned ? "Unpin detail" : "Pin detail"}
-                        onClick={() => toggleInformationPin(widget.id, i.id)}
-                      >
-                        <Pin className="size-3" />
-                      </MiniAction>
-                      <MiniAction
-                        label="Convert to sticky note"
-                        onClick={() => convertInformationToSticky(widget.id, i.id)}
-                      >
-                        <ArrowUpRight className="size-3" />
-                      </MiniAction>
-                      <DeleteAction
-                        label="Delete detail"
-                        confirming={false}
-                        onRequest={() => setConfirming(i.id)}
-                        onCancel={() => setConfirming(null)}
-                        onConfirm={() => deleteInformation(widget.id, i.id)}
-                      />
-                    </>
-                  )}
-                </ItemActions>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-      <button
-        type="button"
-        onClick={() => addInformation(widget.id)}
-        className="label-xs flex items-center gap-1 rounded-md px-1 py-0.5 text-muted-foreground transition-colors hover:text-foreground"
-      >
-        <Plus className="size-3" /> Add detail
-      </button>
-    </div>
-  );
-}
 
 export function WidgetContent({
   widget,
@@ -1251,7 +1132,7 @@ export function WidgetContent({
         onToggleFilter={onToggleFilter}
       />
     );
-  if (c.kind === "information") return <InformationContent widget={widget} />;
+  
 
   return <NotesContent widget={widget} />;
 }

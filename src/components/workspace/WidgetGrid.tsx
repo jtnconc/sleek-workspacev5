@@ -19,7 +19,7 @@ const ROW_UNIT = 150;
 const ROW_GAP = 12;
 const MINIMIZED_BUTTON_SIZE = 36;
 const MINIMIZED_GAP = 8;
-const BASE_WIDGET_TYPES = new Set(["reminders", "contacts", "information", "tasks", "notes"]);
+const BASE_WIDGET_TYPES = new Set(["reminders", "contacts", "tasks", "notes"]);
 
 /** Fixed outer height (px) for a card spanning `h` grid rows, including the
  * inter-row gap that a 2-row card absorbs. */
@@ -552,9 +552,8 @@ export function WidgetGrid() {
                   onToggleLock={() => handleToggleLock(w.id)}
                   onReturn={isSticky ? () => returnStickyToNotes(w.id) : undefined}
                   returnLabel={
-                    w.content.kind === "information"
-                      ? "Return detail to Information list"
-                      : "Return note to Notes list"
+                    "Return note to Notes list"
+
                   }
                 />
               </div>

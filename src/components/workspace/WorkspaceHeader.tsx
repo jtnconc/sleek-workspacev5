@@ -144,8 +144,8 @@ export function WorkspaceHeader({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchOpen]);
 
-  // Global search: matches notes, reminders, tasks, contacts, information
-  // rows and quotations (current + history).
+  // Global search: matches notes, reminders, tasks, contacts and quotations (current + history).
+
   const hits = useMemo<SearchHit[]>(() => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return [];
@@ -174,8 +174,6 @@ export function WorkspaceHeader({
           const hay = [i.name, i.company, i.email, i.phone].filter(Boolean).join(" · ");
           if (hay.toLowerCase().includes(q)) push(hay);
         });
-      } else if (c.kind === "information") {
-        c.items.forEach((i) => push(`${i.label} ${i.value}`));
       } else if (c.kind === "notes") {
         c.items.forEach((i) => push(stripHtml(i.text)));
       }
