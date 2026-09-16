@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Trash } from "@phosphor-icons/react";
 import {
@@ -98,16 +98,22 @@ const isRecentlyCompleted = (completedAt?: number | null) =>
 
 const stop = (e: React.SyntheticEvent) => e.stopPropagation();
 
+/** Lets any action inside an open ItemActions popover close it after running. */
+const ItemActionsCloseContext = createContext<() => void>(() => {});
+
 /** Tiny inline action button used by contextual item controls. */
 function MiniAction({
   label,
   onClick,
+  closeOnClick = true,
   children,
 }: {
   label: string;
   onClick: () => void;
+  closeOnClick?: boolean;
   children: React.ReactNode;
 }) {
+  const closeMenu = useContext(ItemActionsCloseContext);
   return (
     <button
       type="button"
@@ -117,6 +123,7 @@ function MiniAction({
       onClick={(e) => {
         e.stopPropagation();
         onClick();
+        if (closeOnClick) closeMenu();
       }}
       className="flex size-5 shrink-0 items-center justify-center rounded-md text-muted-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
     >
@@ -137,9 +144,10 @@ function ItemActions({
   revealed: boolean;
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <span className="absolute right-0 top-0 z-10">
-      <Popover>
+    <span className="absolute right-1.5 top-1.5 z-10">
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
             type="button"
@@ -162,7 +170,9 @@ function ItemActions({
           onPointerDown={stop}
           className="flex w-auto items-center gap-0.5 rounded-full border-border bg-popover p-1 shadow-lg"
         >
-          {children}
+          <ItemActionsCloseContext.Provider value={() => setOpen(false)}>
+            {children}
+          </ItemActionsCloseContext.Provider>
         </PopoverContent>
       </Popover>
     </span>
