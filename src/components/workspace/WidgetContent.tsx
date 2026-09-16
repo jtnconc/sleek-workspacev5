@@ -20,6 +20,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useWorkspace } from "@/workspace/store";
 import type {
   ContactCategory,
