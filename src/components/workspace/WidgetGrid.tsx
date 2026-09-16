@@ -456,7 +456,14 @@ export function WidgetGrid() {
                 +{pulse}
               </span>
             ) : null}
-            <header className="mb-3 flex items-center justify-between gap-2">
+            <header
+              className={cn(
+                "flex items-center justify-between gap-2",
+                isSticky
+                  ? "mb-3"
+                  : "mb-3 border-b border-border/50 pb-2 mx-1"
+              )}
+            >
               <div className="flex min-w-0 items-center gap-2">
                 {isSticky ? (
                   <button
