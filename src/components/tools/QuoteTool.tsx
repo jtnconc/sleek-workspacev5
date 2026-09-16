@@ -528,32 +528,28 @@ const toggleItem = (itemId: string) => {
                 </div>
               </div>
             </div>
-            <div className="@container min-w-0">
-              <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                <div className="shrink-0 whitespace-nowrap tabular-nums text-xs @[260px]:text-sm">
-                  <DateField
-                    value={quote.issueDate}
-                    onChange={(iso) => updateQuote({ issueDate: iso })}
-                    size="sm"
-                    aria-label="Issue date"
-                    className="w-[9.5rem]"
-                  />
-                </div>
+            <div className="text-right">
+              <DateField
+                value={quote.issueDate}
+                onChange={(iso) => updateQuote({ issueDate: iso })}
+                size="sm"
+                aria-label="Issue date"
+                className="w-[9.5rem]"
+              />
 
-                <p className="min-w-0 truncate text-xs tabular-nums">
-                  {L.quotationNo} {quoteNumber(quote)}
-                </p>
-                {quote.status && (
-                  <span
-                    className={cn(
-                      "inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-[10px] font-medium @[260px]:text-xs",
-                      STATUS_PILL_CLASS[quote.status],
-                    )}
-                  >
-                    {STATUS_PILL_LABEL[quote.status][lang]}
-                  </span>
-                )}
-              </div>
+              <p className="mt-1 tabular-nums text-[11px] text-muted-foreground">
+                {L.quotationNo} {quoteNumber(quote)}
+              </p>
+              {quote.status && (
+                <span
+                  className={cn(
+                    "mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium",
+                    STATUS_PILL_CLASS[quote.status],
+                  )}
+                >
+                  {STATUS_PILL_LABEL[quote.status][lang]}
+                </span>
+              )}
             </div>
           </header>
 
