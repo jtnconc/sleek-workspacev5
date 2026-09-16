@@ -7,6 +7,158 @@ import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
 
+const MONTH_LABELS_ES = [
+  "ene",
+  "feb",
+  "mar",
+  "abr",
+  "may",
+  "jun",
+  "jul",
+  "ago",
+  "sep",
+  "oct",
+  "nov",
+  "dic",
+];
+
+const YEAR_GRID_SPAN = 12;
+
+function MonthYearCaption({
+  month,
+  view,
+  onToggleView,
+}: {
+  month: Date;
+  view: "days" | "months" | "years";
+  onToggleView: (view: "days" | "months" | "years") => void;
+}) {
+  return (
+    <div className="flex h-(--cell-size) w-full items-center justify-center gap-1.5">
+      <button
+        type="button"
+        onClick={() => onToggleView(view === "months" ? "days" : "months")}
+        aria-expanded={view === "months"}
+        className={cn(
+          "select-none rounded-full border border-transparent px-3 py-1 text-sm font-medium capitalize transition-colors hover:border-border hover:bg-accent hover:text-accent-foreground",
+          view === "months" && "border-primary/30 bg-primary/10 text-primary",
+        )}
+      >
+        {month.toLocaleString("es", { month: "long" })}
+      </button>
+      <button
+        type="button"
+        onClick={() => onToggleView(view === "years" ? "days" : "years")}
+        aria-expanded={view === "years"}
+        className={cn(
+          "select-none rounded-full border border-transparent px-3 py-1 text-sm font-medium transition-colors hover:border-border hover:bg-accent hover:text-accent-foreground",
+          view === "years" && "border-primary/30 bg-primary/10 text-primary",
+        )}
+      >
+        {month.getFullYear()}
+      </button>
+    </div>
+  );
+}
+
+function MonthYearPickerPopup({
+  month,
+  view,
+  yearPage,
+  onShiftYears,
+  onClose,
+  onPickMonth,
+  onPickYear,
+}: {
+  month: Date;
+  view: "months" | "years";
+  yearPage: number;
+  onShiftYears: (delta: number) => void;
+  onClose: () => void;
+  onPickMonth: (index: number) => void;
+  onPickYear: (year: number) => void;
+}) {
+  const startYear =
+    month.getFullYear() - Math.floor(YEAR_GRID_SPAN / 2) + yearPage * YEAR_GRID_SPAN;
+  const years = Array.from({ length: YEAR_GRID_SPAN }, (_, i) => startYear + i);
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="Cerrar selector"
+        onClick={onClose}
+        className="absolute inset-x-0 top-11 bottom-0 z-40 cursor-default rounded-2xl bg-background/60"
+        tabIndex={-1}
+      />
+      <div
+        className="absolute inset-x-0 top-11 z-50 mx-auto w-56 rounded-2xl border border-border bg-card p-2 shadow-xl"
+        role="dialog"
+      >
+        {view === "months" ? (
+          <div className="grid grid-cols-3 gap-1.5">
+            {MONTH_LABELS_ES.map((label, index) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => onPickMonth(index)}
+                className={cn(
+                  "select-none rounded-xl px-2 py-2 text-xs font-semibold uppercase tracking-wide text-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+                  index === month.getMonth() &&
+                    "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between px-1">
+              <button
+                type="button"
+                aria-label="Años anteriores"
+                onClick={() => onShiftYears(-1)}
+                className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                <ChevronLeftIcon className="size-4" />
+              </button>
+              <span className="text-xs font-semibold text-muted-foreground">
+                {years[0]} – {years[years.length - 1]}
+              </span>
+              <button
+                type="button"
+                aria-label="Años siguientes"
+                onClick={() => onShiftYears(1)}
+                className="rounded-full p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              >
+                <ChevronRightIcon className="size-4" />
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              {years.map((year) => (
+                <button
+                  key={year}
+                  type="button"
+                  onClick={() => onPickYear(year)}
+                  className={cn(
+                    "select-none rounded-xl px-2 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
+                    year === month.getFullYear() &&
+                      "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
+                  )}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+
 function Calendar({
   className,
   classNames,
@@ -15,17 +167,61 @@ function Calendar({
   buttonVariant = "ghost",
   formatters,
   components,
+  month: monthProp,
+  defaultMonth,
+  onMonthChange,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"];
 }) {
   const defaultClassNames = getDefaultClassNames();
 
+  const [month, setMonth] = React.useState<Date>(monthProp ?? defaultMonth ?? new Date());
+  const [view, setViewState] = React.useState<"days" | "months" | "years">("days");
+  const [yearPage, setYearPage] = React.useState(0);
+
+  const setView = (next: "days" | "months" | "years") => {
+    if (next !== "years") setYearPage(0);
+    setViewState(next);
+  };
+
+  const currentMonth = monthProp ?? month;
+
+  const handleMonthChange = (next: Date) => {
+    setMonth(next);
+    onMonthChange?.(next);
+  };
+
+  const pickMonth = (index: number) => {
+    handleMonthChange(new Date(currentMonth.getFullYear(), index, 1));
+    setView("days");
+  };
+
+  const pickYear = (year: number) => {
+    handleMonthChange(new Date(year, currentMonth.getMonth(), 1));
+    setView("months");
+  };
+
   return (
-    <DayPicker
+    <div className="relative">
+      {view !== "days" && (
+        <MonthYearPickerPopup
+          month={currentMonth}
+          view={view}
+          yearPage={yearPage}
+          onShiftYears={(delta) => setYearPage((p) => p + delta)}
+          onClose={() => setView("days")}
+          onPickMonth={pickMonth}
+          onPickYear={pickYear}
+        />
+      )}
+
+      <DayPicker
       showOutsideDays={showOutsideDays}
+      month={currentMonth}
+      onMonthChange={handleMonthChange}
       className={cn(
-        "bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        "bg-background group/calendar rounded-2xl p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className,
@@ -40,23 +236,27 @@ function Calendar({
         months: cn("relative flex flex-col gap-4 md:flex-row", defaultClassNames.months),
         month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
         nav: cn(
-          "absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1",
+          // The nav row is absolutely positioned across the whole caption area, so it
+          // paints above the (statically positioned) caption and would swallow clicks
+          // on the month/year labels. Let clicks pass through the empty middle.
+          "pointer-events-none absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1",
           defaultClassNames.nav,
         ),
         button_previous: cn(
           buttonVariants({ variant: buttonVariant }),
-          "h-(--cell-size) w-(--cell-size) select-none p-0 aria-disabled:opacity-50",
+          "pointer-events-auto h-(--cell-size) w-(--cell-size) select-none p-0 aria-disabled:opacity-50",
           defaultClassNames.button_previous,
         ),
         button_next: cn(
           buttonVariants({ variant: buttonVariant }),
-          "h-(--cell-size) w-(--cell-size) select-none p-0 aria-disabled:opacity-50",
+          "pointer-events-auto h-(--cell-size) w-(--cell-size) select-none p-0 aria-disabled:opacity-50",
           defaultClassNames.button_next,
         ),
         month_caption: cn(
-          "flex h-(--cell-size) w-full items-center justify-center px-(--cell-size)",
+          "relative z-10 flex h-(--cell-size) w-full items-center justify-center px-(--cell-size)",
           defaultClassNames.month_caption,
         ),
+
         dropdowns: cn(
           "flex h-(--cell-size) w-full items-center justify-center gap-1.5 text-sm font-medium",
           defaultClassNames.dropdowns,
@@ -120,6 +320,9 @@ function Calendar({
           return <ChevronDownIcon className={cn("size-4", className)} {...props} />;
         },
         DayButton: CalendarDayButton,
+        MonthCaption: () => (
+          <MonthYearCaption month={currentMonth} view={view} onToggleView={setView} />
+        ),
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
@@ -132,7 +335,8 @@ function Calendar({
         ...components,
       }}
       {...props}
-    />
+      />
+    </div>
   );
 }
 
