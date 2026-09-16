@@ -255,6 +255,20 @@ export function NotesTool() {
             onBlur={() => {
               flushNoteText();
             }}
+            onDoubleClick={(e) => {
+              const target = e.target as HTMLElement;
+              const cell = target.closest("td, th") as HTMLElement | null;
+              if (!cell) return;
+              const text = cell.textContent ?? "";
+              if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).catch(() => {});
+              }
+              cell.style.transition = "background-color 200ms ease";
+              cell.style.backgroundColor = "var(--primary)";
+              window.setTimeout(() => {
+                cell.style.backgroundColor = "";
+              }, 300);
+            }}
             onKeyDown={(e) => {
               if (e.key !== "Enter" || e.shiftKey) return;
               const el = e.currentTarget;

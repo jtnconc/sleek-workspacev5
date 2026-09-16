@@ -267,6 +267,20 @@ export function insertNotesImage(dataUrl: string) {
   });
 }
 
+export function insertNotesTable() {
+  const cells = Array.from({ length: 3 }, () =>
+    `<td style="border:1px solid var(--border);padding:6px 8px;">&nbsp;</td>`,
+  ).join("");
+  const rows = Array.from({ length: 3 }, () =>
+    `<tr>${cells}</tr>`,
+  ).join("");
+  const html = `<table style="width:100%;table-layout:fixed;border-collapse:collapse;margin:8px 0;">${rows}</table>`;
+  withEditor(() => {
+    document.execCommand("insertHTML", false, html);
+  });
+}
+
+
 const ZWSP = "\u200B";
 
 /**
