@@ -297,7 +297,7 @@ export function insertNotesTable() {
     { length: rows },
     () => `<tr>${cellHtml.repeat(cols)}</tr>`,
   ).join("");
-  const html = `<table data-notes-table="1" style="width:100%;table-layout:fixed;border-collapse:collapse;margin:8px 0;"><colgroup>${colgroup}</colgroup><tbody>${rowsHtml}</tbody></table>`;
+  const html = `<table data-notes-table="1" style="width:calc(100% - 22px);table-layout:fixed;border-collapse:collapse;margin:26px 0 8px 22px;"><colgroup>${colgroup}</colgroup><tbody>${rowsHtml}</tbody></table>`;
   withEditor(() => {
     document.execCommand("insertHTML", false, html);
   });

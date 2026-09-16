@@ -242,7 +242,7 @@ export function NotesTableOverlay({ containerRef, editorRef }: Props) {
         onClick={stop}
         className="absolute z-20"
         style={{
-          top: tableRect.top - 16,
+          top: Math.max(2, tableRect.top - 16),
           left: colRect.left,
           width: colRect.width,
         }}
@@ -286,7 +286,7 @@ export function NotesTableOverlay({ containerRef, editorRef }: Props) {
         data-table-overlay-control
         onClick={stop}
         className="absolute z-20"
-        style={{ top: rowRect.top, left: tableRect.left - 16, height: rowRect.height }}
+        style={{ top: rowRect.top, left: Math.max(2, tableRect.left - 16), height: rowRect.height }}
       >
         <button
           type="button"
