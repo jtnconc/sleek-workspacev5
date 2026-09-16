@@ -4,20 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -46,90 +32,80 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-entity-person: var(--entity-person);
+  --color-entity-person-bg: var(--entity-person-bg);
+  --color-entity-date: var(--entity-date);
+  --color-entity-date-bg: var(--entity-date-bg);
+  --color-entity-reservation: var(--entity-reservation);
+  --color-entity-reservation-bg: var(--entity-reservation-bg);
+  --color-entity-email: var(--entity-email);
+  --color-entity-email-bg: var(--entity-email-bg);
+  --color-entity-phone: var(--entity-phone);
+  --color-entity-phone-bg: var(--entity-phone-bg);
+  --color-entity-confirmation: var(--entity-confirmation);
+  --color-entity-confirmation-bg: var(--entity-confirmation-bg);
+  --color-entity-hotel: var(--entity-hotel);
+  --color-entity-hotel-bg: var(--entity-hotel-bg);
+  --color-entity-place: var(--entity-place);
+  --color-entity-place-bg: var(--entity-place-bg);
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, sans-serif;
+  --font-display: "Bricolage Grotesque", "Plus Jakarta Sans", sans-serif;
+  --font-mono: "Spline Sans Mono", ui-monospace, monospace;
+  --shadow-desk: 0 1px 2px oklch(0.2 0.02 260 / 0.04), 0 8px 24px -12px oklch(0.2 0.02 260 / 0.14);
+  --shadow-lift: 0 2px 4px oklch(0.2 0.02 260 / 0.05), 0 18px 44px -20px oklch(0.2 0.02 260 / 0.22);
+  --ease-desk: cubic-bezier(0.22, 1, 0.36, 1);
+  --color-rate-blue-bg: oklch(0.95 0.025 250);
+  --color-rate-blue-text: oklch(0.42 0.1 250);
+  --color-badge-weekday-bg: oklch(0.94 0.03 250);
+  --color-badge-weekday-text: oklch(0.42 0.11 250);
+  --color-badge-weekend-bg: oklch(0.95 0.035 80);
+  --color-badge-weekend-text: oklch(0.55 0.13 80);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0.875rem;
+  --background: oklch(0.985 0.003 100);
+  --foreground: oklch(0.215 0.014 265);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.972 0.004 100);
+  --surface-3: oklch(0.94 0.004 100);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.215 0.014 265);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
-}
+  --popover-foreground: oklch(0.215 0.014 265);
+  --primary: oklch(0.29 0.03 258);
+  --primary-foreground: oklch(0.99 0.002 100);
+  --secondary: oklch(0.965 0.004 100);
+  --secondary-foreground: oklch(0.29 0.03 258);
+  --muted: oklch(0.965 0.004 100);
+  --muted-foreground: oklch(0.55 0.012 265);
+  --accent: oklch(0.94 0.02 210);
+  --accent-foreground: oklch(0.3 0.04 250);
+  --destructive: oklch(0.577 0.19 25);
+  --destructive-foreground: oklch(0.99 0.002 100);
+  --border: oklch(0.915 0.005 100);
+  --input: oklch(0.915 0.005 100);
+  --ring: oklch(0.72 0.03 250);
 
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --entity-person: oklch(0.45 0.13 265);
+  --entity-person-bg: oklch(0.94 0.035 265);
+  --entity-date: oklch(0.46 0.14 255);
+  --entity-date-bg: oklch(0.94 0.04 255);
+  --entity-reservation: oklch(0.48 0.14 55);
+  --entity-reservation-bg: oklch(0.95 0.045 70);
+  --entity-email: oklch(0.48 0.11 92);
+  --entity-email-bg: oklch(0.95 0.06 95);
+  --entity-phone: oklch(0.45 0.12 155);
+  --entity-phone-bg: oklch(0.94 0.05 155);
+  --entity-confirmation: oklch(0.46 0.15 300);
+  --entity-confirmation-bg: oklch(0.94 0.045 300);
+  --entity-hotel: oklch(0.44 0.1 25);
+  --entity-hotel-bg: oklch(0.95 0.03 25);
+  --entity-place: oklch(0.44 0.09 195);
+  --entity-place-bg: oklch(0.94 0.035 195);
 }
 
 @layer base {
@@ -140,5 +116,273 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Slim, theme-aware scrollbars (Windows parity with macOS overlay bars). */
+  :root {
+    --scrollbar-thumb: oklch(0.7 0.01 265 / 0.35);
+    --scrollbar-thumb-hover: oklch(0.6 0.012 265 / 0.55);
+  }
+  .dark {
+    --scrollbar-thumb: oklch(0.7 0.01 265 / 0.28);
+    --scrollbar-thumb-hover: oklch(0.8 0.012 265 / 0.45);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  /* WebKit / Chromium / Edge */
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover);
+  }
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+/* Card scroll areas: keep the track invisible at rest and fade a slim thumb
+   in only while the pointer is over (or focus is inside) the card. Narrow
+   cards then stay visually clean instead of showing a permanent scrollbar.
+   Higher specificity than the base `*` rules so it overrides them. */
+.hover-scroll {
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 200ms var(--ease-desk);
+}
+.hover-scroll:hover,
+.hover-scroll:focus-within {
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+.hover-scroll::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  transition: background-color 200ms var(--ease-desk);
+}
+.hover-scroll:hover::-webkit-scrollbar-thumb,
+.hover-scroll:focus-within::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+}
+.hover-scroll:hover::-webkit-scrollbar-thumb:hover,
+.hover-scroll:focus-within::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+@utility desk-panel {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-desk);
+}
+
+@utility label-xs {
+  font-size: 0.6875rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--foreground);
+  opacity: 0.65;
+}
+
+/* Number inputs without browser spinner arrows */
+.number-input-clean {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.number-input-clean::-webkit-outer-spin-button,
+.number-input-clean::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Notes editor: clean blank canvas */
+@utility notes-paper {
+  background-color: var(--surface);
+}
+
+.notes-editor {
+  font-size: 15px;
+  /* Unitless so the line box scales with the configured font size,
+     including inside explicitly sized spans. */
+  line-height: 1.75;
+  padding: 4px 6px;
+  /* Native browser caret, tinted with the app's accent color. */
+  caret-color: var(--muted-foreground);
+}
+
+
+
+.notes-editor img {
+  display: block;
+}
+
+/* Bulleted lists (Tailwind's preflight resets list markers/padding). */
+.notes-editor ul,
+.notes-rich ul {
+  list-style: disc;
+  padding-left: 1.5em;
+  margin: 4px 0;
+}
+
+.notes-editor ol,
+.notes-rich ol {
+  list-style: decimal;
+  padding-left: 1.5em;
+  margin: 4px 0;
+}
+
+.notes-editor li,
+.notes-rich li {
+  display: list-item;
+}
+
+/* Pastel text highlights. */
+.notes-editor mark,
+.notes-rich mark {
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
+/* Read-only rich note rendering (bold / italic / colors / images preserved). */
+.notes-rich {
+  white-space: pre-wrap;
+}
+
+.notes-rich img {
+  display: block;
+  max-width: 100%;
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+::highlight(entity-person) { background-color: var(--entity-person-bg); color: var(--entity-person); }
+::highlight(entity-date) { background-color: var(--entity-date-bg); color: var(--entity-date); }
+::highlight(entity-reservation) { background-color: var(--entity-reservation-bg); color: var(--entity-reservation); }
+::highlight(entity-confirmation) { background-color: var(--entity-confirmation-bg); color: var(--entity-confirmation); }
+::highlight(entity-email) { background-color: var(--entity-email-bg); color: var(--entity-email); }
+::highlight(entity-phone) { background-color: var(--entity-phone-bg); color: var(--entity-phone); }
+::highlight(entity-hotel) { background-color: var(--entity-hotel-bg); color: var(--entity-hotel); }
+::highlight(entity-place) { background-color: var(--entity-place-bg); color: var(--entity-place); }
+
+/* Call-management property code badges (exact brand hex per property). */
+::highlight(property-ar) { background-color: #C2C0C0; color: #1c1c1e; }
+::highlight(property-er) { background-color: #CE647E; color: #ffffff; }
+::highlight(property-ri) { background-color: #886671; color: #ffffff; }
+
+/* Widget accent palette — subtle, predefined */
+:root {
+  --w-neutral: oklch(0.55 0.012 265);
+  --w-blue: oklch(0.55 0.13 250);
+  --w-green: oklch(0.52 0.11 160);
+  --w-yellow: oklch(0.66 0.12 95);
+  --w-orange: oklch(0.62 0.14 55);
+  --w-red: oklch(0.55 0.16 25);
+  --w-purple: oklch(0.52 0.14 300);
+
+  /* Sticky note background tints — ultra-light pastels, cool + warm */
+  --w-tint-neutral: #f8f9fa;
+  --w-tint-blue: #eaf4fe;
+  --w-tint-green: #ecfaef;
+  --w-tint-yellow: #fefbe4;
+  --w-tint-orange: #fff2e6;
+  --w-tint-red: #fff0f2;
+  --w-tint-purple: #f7f0fd;
+}
+
+@keyframes widget-settle {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  35% { transform: translate3d(0, 3px, 0) scale(0.994); }
+  70% { transform: translate3d(0, -1px, 0) scale(1.002); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.widget-settle {
+  animation: widget-settle 300ms var(--ease-desk) both;
+}
+
+@keyframes widget-glow {
+  0% { box-shadow: var(--shadow-desk); }
+  30% { box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 45%, transparent), var(--shadow-lift); }
+  100% { box-shadow: var(--shadow-desk); }
+}
+
+.widget-glow {
+  animation: widget-glow 1600ms var(--ease-desk) 2;
+}
+
+@keyframes widget-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.widget-shake {
+  animation: widget-shake 450ms var(--ease-desk) both;
+}
+
+/* Gentle breathing pulse for the "due soon" clock badge (pure CSS). */
+@keyframes due-clock-pulse {
+  0%, 100% { transform: translate(50%, -50%) scale(1); opacity: 0.85; }
+  50% { transform: translate(50%, -50%) scale(1.18); opacity: 1; }
+}
+
+.due-clock {
+  animation: due-clock-pulse 2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .due-clock { animation: none; }
+}
+
+/* Inline (in-list) variant of the due-soon clock: pulse without offsets. */
+@keyframes due-clock-pulse-inline {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.due-clock-inline {
+  animation: due-clock-pulse-inline 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .due-clock-inline { animation: none; }
+}
+
+/* Full-pill breathing pulse for reminders/tasks that are past their due time. */
+@keyframes pill-alert-pulse {
+  0%, 100% {
+    background-color: color-mix(in oklch, var(--pulse-color) 12%, transparent);
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--pulse-color) 35%, transparent);
+  }
+  50% {
+    background-color: color-mix(in oklch, var(--pulse-color) 22%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in oklch, var(--pulse-color) 18%, transparent);
+  }
+}
+
+.pill-alert-pulse {
+  animation: pill-alert-pulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-alert-pulse {
+    animation: none;
+    background-color: color-mix(in oklch, var(--pulse-color) 15%, transparent);
   }
 }
