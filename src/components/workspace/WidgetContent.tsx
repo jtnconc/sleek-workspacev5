@@ -195,7 +195,7 @@ function DeleteAction({
 }) {
   if (!confirming)
     return (
-      <MiniAction label={label} onClick={onRequest}>
+      <MiniAction label={label} onClick={onRequest} closeOnClick={false}>
         <Trash size={12} />
       </MiniAction>
     );
