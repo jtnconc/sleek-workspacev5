@@ -267,17 +267,117 @@ export function insertNotesImage(dataUrl: string) {
   });
 }
 
+export const NOTES_TABLE_MAX_COLS = 6;
+export const NOTES_TABLE_MAX_ROWS = 10;
+
+const TABLE_CELL_STYLE = "border:1px solid var(--border);padding:6px 8px;";
+
+function makeCell(): HTMLTableCellElement {
+  const td = document.createElement("td");
+  td.setAttribute("style", TABLE_CELL_STYLE);
+  td.innerHTML = "&nbsp;";
+  return td;
+}
+
+/** Notifies the editor's `input` listener without touching focus/selection. */
+export function notifyNotesTableChange() {
+  editor?.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
 export function insertNotesTable() {
-  const cells = Array.from({ length: 3 }, () =>
-    `<td style="border:1px solid var(--border);padding:6px 8px;">&nbsp;</td>`,
+  const cols = 3;
+  const rows = 3;
+  const colWidth = (100 / cols).toFixed(4);
+  const colgroup = Array.from(
+    { length: cols },
+    () => `<col style="width:${colWidth}%">`,
   ).join("");
-  const rows = Array.from({ length: 3 }, () =>
-    `<tr>${cells}</tr>`,
+  const cellHtml = `<td style="${TABLE_CELL_STYLE}">&nbsp;</td>`;
+  const rowsHtml = Array.from(
+    { length: rows },
+    () => `<tr>${cellHtml.repeat(cols)}</tr>`,
   ).join("");
-  const html = `<table style="width:100%;table-layout:fixed;border-collapse:collapse;margin:8px 0;">${rows}</table>`;
+  const html = `<table data-notes-table="1" style="width:100%;table-layout:fixed;border-collapse:collapse;margin:8px 0;"><colgroup>${colgroup}</colgroup><tbody>${rowsHtml}</tbody></table>`;
   withEditor(() => {
     document.execCommand("insertHTML", false, html);
   });
+}
+
+export function notesTableColumnCount(table: HTMLTableElement): number {
+  return table.rows[0]?.cells.length ?? 0;
+}
+
+export function addNotesTableColumn(
+  table: HTMLTableElement,
+  atIndex: number,
+  position: "before" | "after",
+) {
+  const rows = Array.from(table.rows);
+  const colCount = notesTableColumnCount(table);
+  if (colCount === 0 || colCount >= NOTES_TABLE_MAX_COLS) return;
+  const insertIndex = position === "before" ? atIndex : atIndex + 1;
+  for (const row of rows) {
+    row.insertBefore(makeCell(), row.cells[insertIndex] ?? null);
+  }
+  const colgroup = table.querySelector("colgroup");
+  if (colgroup) {
+    const col = document.createElement("col");
+    colgroup.insertBefore(col, colgroup.children[insertIndex] ?? null);
+    const evenWidth = `${(100 / colgroup.children.length).toFixed(4)}%`;
+    Array.from(colgroup.children).forEach((c) => {
+      (c as HTMLTableColElement).style.width = evenWidth;
+    });
+  }
+}
+
+export function deleteNotesTableColumn(table: HTMLTableElement, index: number) {
+  const colCount = notesTableColumnCount(table);
+  if (colCount <= 1) return;
+  for (const row of Array.from(table.rows)) row.deleteCell(index);
+  const colgroup = table.querySelector("colgroup");
+  if (colgroup?.children[index]) {
+    colgroup.removeChild(colgroup.children[index]!);
+    const evenWidth = `${(100 / colgroup.children.length).toFixed(4)}%`;
+    Array.from(colgroup.children).forEach((c) => {
+      (c as HTMLTableColElement).style.width = evenWidth;
+    });
+  }
+}
+
+export function addNotesTableRow(
+  table: HTMLTableElement,
+  atIndex: number,
+  position: "above" | "below",
+) {
+  const body = table.tBodies[0] ?? table;
+  const rows = Array.from(table.rows);
+  if (rows.length >= NOTES_TABLE_MAX_ROWS) return;
+  const colCount = notesTableColumnCount(table) || 1;
+  const newRow = document.createElement("tr");
+  for (let i = 0; i < colCount; i += 1) newRow.appendChild(makeCell());
+  const insertIndex = position === "above" ? atIndex : atIndex + 1;
+  body.insertBefore(newRow, rows[insertIndex] ?? null);
+}
+
+export function deleteNotesTableRow(table: HTMLTableElement, index: number) {
+  const rows = Array.from(table.rows);
+  if (rows.length <= 1) return;
+  rows[index]?.remove();
+}
+
+/** Moves the row at `fromIndex` so it lands at `toIndex` (both pre-move indices). */
+export function reorderNotesTableRow(
+  table: HTMLTableElement,
+  fromIndex: number,
+  toIndex: number,
+) {
+  if (fromIndex === toIndex) return;
+  const body = table.tBodies[0] ?? table;
+  const rows = Array.from(table.rows);
+  const moving = rows[fromIndex];
+  if (!moving) return;
+  const refRow = rows[toIndex > fromIndex ? toIndex + 1 : toIndex];
+  body.insertBefore(moving, refRow ?? null);
 }
 
 
