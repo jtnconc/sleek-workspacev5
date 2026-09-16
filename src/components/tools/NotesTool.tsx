@@ -26,6 +26,7 @@ import {
 } from "./notes-format";
 
 import { CallHistoryPanel } from "./CallHistoryPanel";
+import { NotesTableOverlay } from "./NotesTableOverlay";
 
 export function NotesTool() {
   const {
@@ -318,6 +319,7 @@ export function NotesTool() {
             }}
             className="notes-editor min-h-full w-full outline-none"
           />
+          <NotesTableOverlay containerRef={paperRef} editorRef={editorRef} />
         </div>
 
         {showHistory && <CallHistoryPanel entries={callHistory} notes={savedNotes} />}
