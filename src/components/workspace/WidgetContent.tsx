@@ -990,6 +990,21 @@ function StickyNoteEditor({ widgetId, note }: { widgetId: string; note: NoteRefI
       onInput={(e) => updateNoteContent(widgetId, note.id, e.currentTarget.innerHTML)}
       onPointerDown={stop}
       onDragStart={(e) => e.preventDefault()}
+      onDoubleClick={(e) => {
+        const target = e.target as HTMLElement;
+        const cell = target.closest("td, th") as HTMLElement | null;
+        if (!cell) return;
+        e.preventDefault();
+        const text = cell.textContent ?? "";
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).catch(() => {});
+        }
+        cell.style.transition = "background-color 200ms ease";
+        cell.style.backgroundColor = "rgba(100, 116, 139, 0.35)";
+        window.setTimeout(() => {
+          cell.style.backgroundColor = "";
+        }, 300);
+      }}
       className="notes-rich min-h-5 min-w-0 cursor-text break-words rounded-md text-[13px] leading-snug outline-none transition-colors focus:bg-surface/50"
     />
   );
