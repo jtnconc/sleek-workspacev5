@@ -20,11 +20,11 @@ export const Route = createFileRoute("/")({
         content:
           "A calm digital desk for hotel reservation agents: intelligent notes, senior rate calculator and PDF quotations in one transforming workspace.",
       },
-      { property: "og:title", content: "Reservation Workspace" },
+      { property: "og:title", content: "Sleek Workspace" },
       {
         property: "og:description",
         content:
-          "Write, recognize, save and quote — one workspace that transforms around the reservation you are working on.",
+          "Write, recognize, save and quote - one workspace that transforms around the reservation you are working on.",
       },
     ],
   }),
