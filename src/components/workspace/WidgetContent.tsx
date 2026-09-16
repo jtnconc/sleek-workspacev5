@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Clock,
   Flag,
+  MoreHorizontal,
   Pencil,
   Pin,
   Plus,
