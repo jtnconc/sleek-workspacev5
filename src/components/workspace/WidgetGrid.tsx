@@ -334,7 +334,7 @@ export function WidgetGrid() {
                   aria-label={minimizedLayout === "icon" ? w.title : undefined}
                   title={minimizedLayout === "icon" ? w.title : undefined}
                   className={cn(
-                    "group relative flex h-9 items-center justify-center overflow-visible rounded-full border border-border bg-surface shadow-desk transition-[width,padding,gap,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-lift",
+                    "group relative flex h-9 items-center justify-center overflow-visible rounded-full border border-border bg-surface shadow-desk transition-[width,padding,gap,box-shadow] duration-300 hover:shadow-lift",
                     minimizedLayout === "text"
                       ? "w-auto shrink-0 gap-2 px-3.5"
                       : "flex-1 basis-0 gap-0 px-0",
