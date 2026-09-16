@@ -261,6 +261,29 @@
   white-space: pre-wrap;
 }
 
+/* Tables inherited from a note read like a simple key/value list inside a
+   sticky — no grid lines, full width of the card, one hairline per row —
+   instead of the bordered grid used in the main Notes editor. */
+.notes-rich table[data-notes-table] {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 4px 0 !important;
+  table-layout: auto !important;
+  border-collapse: collapse;
+}
+
+.notes-rich table[data-notes-table] td,
+.notes-rich table[data-notes-table] th {
+  border: none !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 4px 2px !important;
+}
+
+.notes-rich table[data-notes-table] tr:last-child td {
+  border-bottom: none !important;
+}
+
+
 .notes-rich img {
   display: block;
   max-width: 100%;
