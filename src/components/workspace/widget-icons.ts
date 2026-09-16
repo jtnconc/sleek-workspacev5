@@ -43,7 +43,7 @@ const DEFAULT_BY_TYPE: Record<WidgetType, WidgetIconName> = {
   reminders: "bell",
   contacts: "users",
   notes: "note",
-  information: "info",
+  
   tasks: "check",
   sticky: "bookmark",
 };

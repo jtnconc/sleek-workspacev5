@@ -4,7 +4,7 @@ export type WidgetType =
   | "reminders"
   | "contacts"
   | "notes"
-  | "information"
+  
   | "tasks"
   /** Independent sticky note extracted from the main Notes widget. */
   | "sticky";
@@ -106,13 +106,6 @@ export interface TaskItem {
   completedAt?: number | null;
 }
 
-export interface InformationItem {
-  id: string;
-  label: string;
-  value: string;
-  /** pinned rows render at the top of the INFORMATION widget */
-  pinned?: boolean;
-}
 
 export interface NoteRefItem {
   id: string;
@@ -127,7 +120,7 @@ export type WidgetContent =
   | { kind: "reminders"; items: ReminderItem[] }
   | { kind: "contacts"; items: ContactItem[] }
   | { kind: "tasks"; items: TaskItem[] }
-  | { kind: "information"; items: InformationItem[] }
+  
   | { kind: "notes"; items: NoteRefItem[] };
 
 export interface Widget {
