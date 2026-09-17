@@ -19,6 +19,8 @@ const ROW_UNIT = 150;
 const ROW_GAP = 12;
 const MINIMIZED_BUTTON_SIZE = 36;
 const MINIMIZED_GAP = 8;
+/** Hard cap on dock pills, independent of available width. */
+const MINIMIZED_MAX_ITEMS = 9;
 const BASE_WIDGET_TYPES = new Set(["reminders", "contacts", "tasks", "notes"]);
 
 /** Fixed outer height (px) for a card spanning `h` grid rows, including the
