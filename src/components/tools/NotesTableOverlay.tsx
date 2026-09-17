@@ -242,7 +242,7 @@ export function NotesTableOverlay({ containerRef, editorRef }: Props) {
         onClick={stop}
         className="absolute z-20"
         style={{
-          top: Math.max(2, tableRect.top - 16),
+          top: Math.max(2, tableRect.top - 20),
           left: colRect.left,
           width: colRect.width,
         }}
@@ -254,14 +254,14 @@ export function NotesTableOverlay({ containerRef, editorRef }: Props) {
             stop(e);
             setMenu(menu === "col" ? null : "col");
           }}
-          className="mx-auto flex h-[14px] items-center gap-0.5 rounded-full border border-border bg-secondary px-2 text-[9px] leading-none text-muted-foreground transition-colors hover:bg-muted"
+          className="mx-auto flex h-[18px] items-center gap-0.5 rounded-full border border-border bg-secondary px-3 text-[10px] leading-none text-muted-foreground transition-colors hover:bg-muted"
           aria-label="Column options"
         >
           <span className="tracking-widest">···</span>
           <ChevronDown className="size-2.5" />
         </button>
         {menu === "col" && (
-          <div className="absolute left-1/2 top-[18px] z-30 w-[170px] -translate-x-1/2 rounded-lg border border-border bg-popover p-1 shadow-lg">
+          <div className="absolute left-1/2 top-[22px] z-30 w-[170px] -translate-x-1/2 rounded-lg border border-border bg-popover p-1 shadow-lg">
             {menuItem(
               "Add Column Before",
               () => after(() => addNotesTableColumn(table, col, "before")),
@@ -286,19 +286,19 @@ export function NotesTableOverlay({ containerRef, editorRef }: Props) {
         data-table-overlay-control
         onClick={stop}
         className="absolute z-20"
-        style={{ top: rowRect.top, left: Math.max(2, tableRect.left - 16), height: rowRect.height }}
+        style={{ top: rowRect.top, left: Math.max(2, tableRect.left - 20), height: rowRect.height }}
       >
         <button
           type="button"
           onPointerDown={startRowDrag}
           onClick={stop}
           aria-label="Row options"
-          className="flex h-full w-[14px] cursor-grab items-center justify-center rounded-md border border-border bg-secondary text-muted-foreground transition-colors hover:bg-muted active:cursor-grabbing"
+          className="flex h-full w-[18px] cursor-grab items-center justify-center rounded-md border border-border bg-secondary text-muted-foreground transition-colors hover:bg-muted active:cursor-grabbing"
         >
           <GripVertical className="size-3" />
         </button>
         {menu === "row" && (
-          <div className="absolute left-[18px] top-0 z-30 w-[150px] rounded-lg border border-border bg-popover p-1 shadow-lg">
+          <div className="absolute left-[22px] top-0 z-30 w-[150px] rounded-lg border border-border bg-popover p-1 shadow-lg">
             {menuItem(
               "Add Row Above",
               () => after(() => addNotesTableRow(table, row, "above")),
@@ -327,8 +327,8 @@ export function NotesTableOverlay({ containerRef, editorRef }: Props) {
             data-table-overlay-control
             onPointerDown={(e) => startResize(i + 1, e)}
             onClick={stop}
-            className="absolute z-20 flex h-[10px] w-[10px] cursor-col-resize items-center justify-center"
-            style={{ top: tableRect.top - 5, left: r.left - 5 }}
+            className="absolute z-20 flex h-[16px] w-[16px] cursor-col-resize items-center justify-center"
+            style={{ top: tableRect.top - 8, left: r.left - 8 }}
           >
             <span className="size-[6px] rounded-full bg-muted-foreground/60" />
           </div>
