@@ -198,7 +198,14 @@ export function WorkspaceHeader({
   }, [searchQuery, widgets, quote, quoteHistory, openWidget, openTool, loadQuote]);
 
   return (
-<header className="sticky top-0 z-40 w-full shrink-0 border-b border-border/60 bg-background/85 backdrop-blur-xl backdrop-saturate-150">
+<header
+      className={cn(
+        "sticky top-0 z-40 w-full shrink-0 transition-colors",
+        mode === "widgets"
+          ? "border-b border-border/60 bg-background/85 backdrop-blur-xl backdrop-saturate-150"
+          : "border-b border-transparent bg-background",
+      )}
+    >
       <div className="mx-auto flex h-14 w-full max-w-[1240px] flex-row flex-nowrap items-center gap-3 px-5">
         <div
           ref={toolbarRowRef}
