@@ -19,6 +19,8 @@ const ROW_UNIT = 150;
 const ROW_GAP = 12;
 const MINIMIZED_BUTTON_SIZE = 36;
 const MINIMIZED_GAP = 8;
+/** Hard cap on dock pills, independent of available width. */
+const MINIMIZED_MAX_ITEMS = 9;
 const BASE_WIDGET_TYPES = new Set(["reminders", "contacts", "tasks", "notes"]);
 
 /** Fixed outer height (px) for a card spanning `h` grid rows, including the
@@ -127,9 +129,10 @@ export function WidgetGrid() {
     const recalculate = () => {
       const availableWidth = Math.max(0, row.clientWidth - 8);
       const requiredTextWidth = measure.getBoundingClientRect().width;
-      if (requiredTextWidth <= availableWidth) {
+      const extraCap = Math.max(0, MINIMIZED_MAX_ITEMS - baseWidgets.length);
+      if (requiredTextWidth <= availableWidth && ordered.length <= MINIMIZED_MAX_ITEMS) {
         setMinimizedLayout("text");
-        setVisibleExtraCount(extraWidgets.length);
+        setVisibleExtraCount(Math.min(extraWidgets.length, extraCap));
         return;
       }
 
@@ -138,7 +141,9 @@ export function WidgetGrid() {
         Math.floor((availableWidth + MINIMIZED_GAP) / (MINIMIZED_BUTTON_SIZE + MINIMIZED_GAP)),
       );
       setMinimizedLayout("icon");
-      setVisibleExtraCount(Math.max(0, Math.min(extraWidgets.length, circleCapacity - baseWidgets.length)));
+      setVisibleExtraCount(
+        Math.max(0, Math.min(extraWidgets.length, extraCap, circleCapacity - baseWidgets.length)),
+      );
     };
 
     const observer = new ResizeObserver(recalculate);
@@ -370,6 +375,14 @@ export function WidgetGrid() {
               );
             })}
           </AnimatePresence>
+          {extraWidgets.length > visibleExtraCount && (
+            <span
+              title={`${extraWidgets.length - visibleExtraCount} more`}
+              className="flex h-9 shrink-0 items-center justify-center rounded-full border border-border bg-surface px-2.5 text-[11px] font-medium text-muted-foreground shadow-desk"
+            >
+              +{extraWidgets.length - visibleExtraCount}
+            </span>
+          )}
         </div>
       </div>
     );
