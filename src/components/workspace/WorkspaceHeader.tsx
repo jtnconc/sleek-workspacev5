@@ -198,7 +198,7 @@ export function WorkspaceHeader({
   }, [searchQuery, widgets, quote, quoteHistory, openWidget, openTool, loadQuote]);
 
   return (
-    <header className="relative z-40 w-full shrink-0 bg-transparent">
+<header className="sticky top-0 z-40 w-full shrink-0 border-b border-transparent bg-background/80 backdrop-blur-md transition-colors">
       <div className="mx-auto flex h-14 w-full max-w-[1240px] flex-row flex-nowrap items-center gap-3 px-5">
         <div
           ref={toolbarRowRef}
