@@ -375,6 +375,14 @@ export function WidgetGrid() {
               );
             })}
           </AnimatePresence>
+          {extraWidgets.length > visibleExtraCount && (
+            <span
+              title={`${extraWidgets.length - visibleExtraCount} more`}
+              className="flex h-9 shrink-0 items-center justify-center rounded-full border border-border bg-surface px-2.5 text-[11px] font-medium text-muted-foreground shadow-desk"
+            >
+              +{extraWidgets.length - visibleExtraCount}
+            </span>
+          )}
         </div>
       </div>
     );
