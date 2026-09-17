@@ -460,7 +460,7 @@ const toggleItem = (itemId: string) => {
         >
           <div className="min-h-0 overflow-hidden">
             <article className="min-w-0 h-full overflow-y-auto rounded-2xl border border-border bg-surface p-4 sm:p-6">
-          <header className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
+          <header className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3 border-b border-border pb-4">
             <div className="flex min-w-0 flex-wrap items-center gap-3">
               <div className="group relative size-10 shrink-0">
                 {logo ? (
@@ -528,22 +528,22 @@ const toggleItem = (itemId: string) => {
                 </div>
               </div>
             </div>
-            <div className="text-right">
+            <div className="flex min-w-0 flex-col items-start gap-1 sm:items-end sm:text-right">
               <DateField
                 value={quote.issueDate}
                 onChange={(iso) => updateQuote({ issueDate: iso })}
                 size="sm"
                 aria-label="Issue date"
-                className="w-[9.5rem]"
+                className="w-full max-w-[9.5rem]"
               />
 
-              <p className="mt-1 tabular-nums text-[11px] text-muted-foreground">
+              <p className="tabular-nums text-[11px] text-muted-foreground">
                 {L.quotationNo} {quoteNumber(quote)}
               </p>
               {quote.status && (
                 <span
                   className={cn(
-                    "mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium",
+                    "inline-flex w-fit items-center rounded-full border px-2 py-0.5 text-[11px] font-medium",
                     STATUS_PILL_CLASS[quote.status],
                   )}
                 >
